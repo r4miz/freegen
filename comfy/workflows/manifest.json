@@ -1,0 +1,1352 @@
+{
+ "flux2_klein_t2i": {
+  "file": "flux2_klein_t2i.api.json",
+  "kind": "image",
+  "label": "FLUX.2 klein 4B (distilled, 4 steps)",
+  "bind": {
+   "prompt": {
+    "node": "76",
+    "input": "value"
+   },
+   "negative": {
+    "node": "75:67",
+    "input": "text"
+   },
+   "width": {
+    "node": "75:68",
+    "input": "value"
+   },
+   "height": {
+    "node": "75:69",
+    "input": "value"
+   },
+   "seed": {
+    "node": "75:73",
+    "input": "noise_seed"
+   }
+  },
+  "constants": {
+   "unet": {
+    "bind": {
+     "node": "75:70",
+     "input": "unet_name"
+    },
+    "value": "flux-2-klein-4b.safetensors"
+   },
+   "steps": {
+    "bind": {
+     "node": "75:62",
+     "input": "steps"
+    },
+    "value": 4
+   },
+   "cfg": {
+    "bind": {
+     "node": "75:63",
+     "input": "cfg"
+    },
+    "value": 1
+   }
+  },
+  "size": {
+   "base": 1024,
+   "multiple": 16
+  },
+  "output": {
+   "node": "9"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "flux-2-klein-4b.safetensors"
+    ],
+    "text_encoders": [
+     "qwen_3_4b.safetensors"
+    ],
+    "vae": [
+     "flux2-vae.safetensors"
+    ]
+   },
+   "nodes": [
+    "EmptyFlux2LatentImage",
+    "Flux2Scheduler"
+   ]
+  }
+ },
+ "flux2_klein_edit": {
+  "file": "flux2_klein_edit.api.json",
+  "kind": "edit",
+  "label": "FLUX.2 klein 4B edit (single reference)",
+  "bind": {
+   "prompt": {
+    "node": "75:74",
+    "input": "text"
+   },
+   "image": {
+    "node": "76",
+    "input": "image"
+   },
+   "seed": {
+    "node": "75:73",
+    "input": "noise_seed"
+   }
+  },
+  "drop": [
+   "81"
+  ],
+  "output": {
+   "node": "9"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "flux-2-klein-4b-fp8.safetensors"
+    ],
+    "text_encoders": [
+     "qwen_3_4b.safetensors"
+    ],
+    "vae": [
+     "flux2-vae.safetensors"
+    ]
+   },
+   "nodes": [
+    "ReferenceLatent",
+    "EmptyFlux2LatentImage"
+   ]
+  }
+ },
+ "qwen21_t2i": {
+  "file": "qwen21_t2i.api.json",
+  "kind": "image",
+  "label": "Qwen-Image-2.1 text to image",
+  "bind": {
+   "prompt": {
+    "node": "459:452",
+    "input": "prompt"
+   },
+   "negative": {
+    "node": "459:452",
+    "input": "negative_prompt"
+   },
+   "width": {
+    "node": "459:456",
+    "input": "width"
+   },
+   "height": {
+    "node": "459:456",
+    "input": "height"
+   },
+   "seed": {
+    "node": "459:458",
+    "input": "seed"
+   }
+  },
+  "drop": [
+   "13",
+   "459:471",
+   "459:473",
+   "459:474",
+   "459:475"
+  ],
+  "size": {
+   "base": 1024,
+   "multiple": 16
+  },
+  "output": {
+   "node": "461"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "qwen_image_2.1_int8_convrot.safetensors"
+    ],
+    "text_encoders": [
+     "qwen3vl_8b_int8_convrot.safetensors"
+    ],
+    "vae": [
+     "qwen_image_2.1_vae_bf16.safetensors"
+    ]
+   },
+   "nodes": [
+    "TextEncodeQwenImage21",
+    "QwenImage21Cache"
+   ]
+  }
+ },
+ "qwen21_edit": {
+  "file": "qwen21_edit.api.json",
+  "kind": "edit",
+  "label": "Qwen-Image-2.1 edit (1 to 2 references)",
+  "bind": {
+   "prompt": {
+    "node": "459:474",
+    "input": "prompt"
+   },
+   "negative": {
+    "node": "459:474",
+    "input": "negative_prompt"
+   },
+   "image": {
+    "node": "470",
+    "input": "image"
+   },
+   "image2": {
+    "node": "475",
+    "input": "image"
+   },
+   "width": {
+    "node": "459:456",
+    "input": "width"
+   },
+   "height": {
+    "node": "459:456",
+    "input": "height"
+   },
+   "seed": {
+    "node": "459:458",
+    "input": "seed"
+   }
+  },
+  "drop": [
+   "459:484",
+   "459:500",
+   "459:477",
+   "459:479",
+   "459:485"
+  ],
+  "when": [
+   {
+    "absent": "image2",
+    "drop": [
+     "475"
+    ],
+    "unlink": [
+     {
+      "node": "459:474",
+      "input": "images.image_2"
+     }
+    ]
+   }
+  ],
+  "size": {
+   "base": 1024,
+   "multiple": 16,
+   "fromImage": true
+  },
+  "output": {
+   "node": "461"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "qwen_image_2.1_int8_convrot.safetensors"
+    ],
+    "text_encoders": [
+     "qwen3vl_8b_int8_convrot.safetensors"
+    ],
+    "vae": [
+     "qwen_image_2.1_vae_bf16.safetensors"
+    ]
+   },
+   "nodes": [
+    "TextEncodeQwenImage21",
+    "QwenImage21Cache"
+   ]
+  }
+ },
+ "qwen21_bgremove": {
+  "file": "qwen21_bgremove.api.json",
+  "kind": "edit",
+  "label": "Qwen-Image-2.1 background removal (transparent PNG)",
+  "bind": {
+   "prompt": {
+    "node": "459:474",
+    "input": "prompt"
+   },
+   "image": {
+    "node": "470",
+    "input": "image"
+   },
+   "width": {
+    "node": "459:456",
+    "input": "width"
+   },
+   "height": {
+    "node": "459:456",
+    "input": "height"
+   },
+   "seed": {
+    "node": "459:458",
+    "input": "seed"
+   }
+  },
+  "size": {
+   "base": 1024,
+   "multiple": 16,
+   "fromImage": true
+  },
+  "output": {
+   "node": "461"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "qwen_image_2.1_int8_convrot.safetensors"
+    ],
+    "text_encoders": [
+     "qwen3vl_8b_int8_convrot.safetensors"
+    ],
+    "vae": [
+     "qwen_image_2.1_vae_bf16.safetensors"
+    ]
+   },
+   "nodes": [
+    "TextEncodeQwenImage21"
+   ]
+  }
+ },
+ "wan22_5b_t2v": {
+  "file": "wan22_5b_ti2v.api.json",
+  "kind": "video",
+  "label": "Wan 2.2 5B text to video (24 fps, up to 5 s)",
+  "bind": {
+   "prompt": {
+    "node": "6",
+    "input": "text"
+   },
+   "negative": {
+    "node": "7",
+    "input": "text"
+   },
+   "seed": {
+    "node": "3",
+    "input": "seed"
+   },
+   "width": {
+    "node": "55",
+    "input": "width"
+   },
+   "height": {
+    "node": "55",
+    "input": "height"
+   },
+   "length": {
+    "node": "55",
+    "input": "length"
+   }
+  },
+  "size": {
+   "base": 960,
+   "multiple": 32
+  },
+  "frames": {
+   "fps": 24,
+   "multiple": 4,
+   "plus": 1,
+   "max": 121
+  },
+  "output": {
+   "node": "58"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "wan2.2_ti2v_5B_fp16.safetensors"
+    ],
+    "text_encoders": [
+     "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+    ],
+    "vae": [
+     "wan2.2_vae.safetensors"
+    ]
+   },
+   "nodes": [
+    "Wan22ImageToVideoLatent"
+   ]
+  }
+ },
+ "wan22_5b_i2v": {
+  "file": "wan22_5b_ti2v.api.json",
+  "kind": "i2v",
+  "label": "Wan 2.2 5B image to video",
+  "add": {
+   "900": {
+    "class_type": "LoadImage",
+    "inputs": {
+     "image": ""
+    },
+    "_meta": {
+     "title": "Load Image (freegen)"
+    }
+   }
+  },
+  "link": [
+   {
+    "node": "55",
+    "input": "start_image",
+    "from": "900"
+   }
+  ],
+  "bind": {
+   "prompt": {
+    "node": "6",
+    "input": "text"
+   },
+   "negative": {
+    "node": "7",
+    "input": "text"
+   },
+   "seed": {
+    "node": "3",
+    "input": "seed"
+   },
+   "image": {
+    "node": "900",
+    "input": "image"
+   },
+   "width": {
+    "node": "55",
+    "input": "width"
+   },
+   "height": {
+    "node": "55",
+    "input": "height"
+   },
+   "length": {
+    "node": "55",
+    "input": "length"
+   }
+  },
+  "size": {
+   "base": 960,
+   "multiple": 32,
+   "fromImage": true
+  },
+  "frames": {
+   "fps": 24,
+   "multiple": 4,
+   "plus": 1,
+   "max": 121
+  },
+  "output": {
+   "node": "58"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "wan2.2_ti2v_5B_fp16.safetensors"
+    ],
+    "text_encoders": [
+     "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+    ],
+    "vae": [
+     "wan2.2_vae.safetensors"
+    ]
+   },
+   "nodes": [
+    "Wan22ImageToVideoLatent"
+   ]
+  }
+ },
+ "wan22_14b_t2v": {
+  "file": "wan22_14b_t2v.api.json",
+  "kind": "video",
+  "label": "Wan 2.2 14B text to video (Lightning 4-step)",
+  "bind": {
+   "prompt": {
+    "node": "128:89",
+    "input": "text"
+   },
+   "negative": {
+    "node": "128:72",
+    "input": "text"
+   },
+   "seed": {
+    "node": "128:81",
+    "input": "noise_seed"
+   },
+   "width": {
+    "node": "128:74",
+    "input": "width"
+   },
+   "height": {
+    "node": "128:74",
+    "input": "height"
+   },
+   "duration": {
+    "node": "128:126",
+    "input": "value"
+   }
+  },
+  "constants": {
+   "lightning": {
+    "bind": {
+     "node": "128:129",
+     "input": "value"
+    },
+    "value": true
+   }
+  },
+  "maxDuration": 5,
+  "size": {
+   "base": 832,
+   "multiple": 16
+  },
+  "output": {
+   "node": "80"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "wan2.2_t2v_high_noise_14B_fp8_scaled.safetensors",
+     "wan2.2_t2v_low_noise_14B_fp8_scaled.safetensors"
+    ],
+    "text_encoders": [
+     "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+    ],
+    "vae": [
+     "wan_2.1_vae.safetensors"
+    ],
+    "loras": [
+     "wan2.2_t2v_lightx2v_4steps_lora_v1.1_high_noise.safetensors",
+     "wan2.2_t2v_lightx2v_4steps_lora_v1.1_low_noise.safetensors"
+    ]
+   },
+   "nodes": [
+    "EmptyHunyuanLatentVideo",
+    "ComfySwitchNode"
+   ]
+  }
+ },
+ "wan22_14b_i2v": {
+  "file": "wan22_14b_i2v.api.json",
+  "kind": "i2v",
+  "label": "Wan 2.2 14B image to video (Lightning 4-step)",
+  "bind": {
+   "prompt": {
+    "node": "129:93",
+    "input": "text"
+   },
+   "negative": {
+    "node": "129:89",
+    "input": "text"
+   },
+   "seed": {
+    "node": "129:86",
+    "input": "noise_seed"
+   },
+   "image": {
+    "node": "97",
+    "input": "image"
+   },
+   "width": {
+    "node": "129:98",
+    "input": "width"
+   },
+   "height": {
+    "node": "129:98",
+    "input": "height"
+   },
+   "duration": {
+    "node": "129:161",
+    "input": "value"
+   }
+  },
+  "constants": {
+   "lightning": {
+    "bind": {
+     "node": "129:131",
+     "input": "value"
+    },
+    "value": true
+   }
+  },
+  "maxDuration": 5,
+  "size": {
+   "base": 832,
+   "multiple": 16,
+   "fromImage": true
+  },
+  "output": {
+   "node": "108"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors",
+     "wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors"
+    ],
+    "text_encoders": [
+     "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+    ],
+    "vae": [
+     "wan_2.1_vae.safetensors"
+    ],
+    "loras": [
+     "wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors",
+     "wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors"
+    ]
+   },
+   "nodes": [
+    "WanImageToVideo",
+    "ComfySwitchNode"
+   ]
+  }
+ },
+ "wan22_14b_flf2v": {
+  "file": "wan22_14b_flf2v.api.json",
+  "kind": "i2v",
+  "label": "Wan 2.2 14B first+last frame",
+  "bind": {
+   "prompt": {
+    "node": "90",
+    "input": "text"
+   },
+   "negative": {
+    "node": "78",
+    "input": "text"
+   },
+   "seed": {
+    "node": "84",
+    "input": "noise_seed"
+   },
+   "image": {
+    "node": "80",
+    "input": "image"
+   },
+   "last_image": {
+    "node": "89",
+    "input": "image"
+   },
+   "width": {
+    "node": "81",
+    "input": "width"
+   },
+   "height": {
+    "node": "81",
+    "input": "height"
+   },
+   "length": {
+    "node": "81",
+    "input": "length"
+   }
+  },
+  "size": {
+   "base": 832,
+   "multiple": 16,
+   "fromImage": true
+  },
+  "frames": {
+   "fps": 16,
+   "multiple": 4,
+   "plus": 1,
+   "max": 81
+  },
+  "output": {
+   "node": "83"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors",
+     "wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors"
+    ],
+    "text_encoders": [
+     "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+    ],
+    "vae": [
+     "wan_2.1_vae.safetensors"
+    ],
+    "loras": [
+     "wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors",
+     "wan2.2_i2v_lightx2v_4steps_lora_v1_high_noise.safetensors"
+    ]
+   },
+   "nodes": [
+    "WanFirstLastFrameToVideo"
+   ]
+  }
+ },
+ "wan22_s2v": {
+  "file": "wan22_s2v.api.json",
+  "kind": "lipsync",
+  "label": "Wan 2.2 S2V speech to video (image + audio)",
+  "bind": {
+   "prompt": {
+    "node": "6",
+    "input": "text"
+   },
+   "negative": {
+    "node": "7",
+    "input": "text"
+   },
+   "seed": {
+    "node": "3",
+    "input": "seed"
+   },
+   "image": {
+    "node": "52",
+    "input": "image"
+   },
+   "audio": {
+    "node": "58",
+    "input": "audio"
+   },
+   "width": {
+    "node": "93",
+    "input": "width"
+   },
+   "height": {
+    "node": "93",
+    "input": "height"
+   }
+  },
+  "size": {
+   "base": 640,
+   "multiple": 16,
+   "fromImage": true
+  },
+  "output": {
+   "node": "113"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "wan2.2_s2v_14B_fp8_scaled.safetensors"
+    ],
+    "text_encoders": [
+     "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+    ],
+    "vae": [
+     "wan_2.1_vae.safetensors"
+    ],
+    "audio_encoders": [
+     "wav2vec2_large_english_fp16.safetensors"
+    ],
+    "loras": [
+     "wan2.2_t2v_lightx2v_4steps_lora_v1.1_high_noise.safetensors"
+    ]
+   },
+   "nodes": [
+    "WanSoundImageToVideo",
+    "WanSoundImageToVideoExtend"
+   ]
+  }
+ },
+ "infinitetalk_i2v": {
+  "file": "infinitetalk_i2v.api.json",
+  "kind": "lipsync",
+  "label": "InfiniteTalk single speaker (image + audio, 2 chunks)",
+  "bind": {
+   "prompt": [
+    {
+     "node": "188:14",
+     "input": "text"
+    },
+    {
+     "node": "324:312",
+     "input": "text"
+    }
+   ],
+   "seed": [
+    {
+     "node": "188:193",
+     "input": "noise_seed"
+    },
+    {
+     "node": "324:321",
+     "input": "noise_seed"
+    }
+   ],
+   "image": {
+    "node": "32",
+    "input": "image"
+   },
+   "audio": {
+    "node": "24",
+    "input": "audio"
+   },
+   "width": {
+    "node": "149",
+    "input": "value"
+   },
+   "height": {
+    "node": "150",
+    "input": "value"
+   }
+  },
+  "constants": {
+   "mode1": {
+    "bind": {
+     "node": "188:129",
+     "input": "mode"
+    },
+    "value": "single_speaker"
+   },
+   "mode2": {
+    "bind": {
+     "node": "324:311",
+     "input": "mode"
+    },
+    "value": "single_speaker"
+   }
+  },
+  "unlink": [
+   {
+    "node": "188:129",
+    "input": "mode.audio_encoder_output_2"
+   },
+   {
+    "node": "188:129",
+    "input": "mode.mask_1"
+   },
+   {
+    "node": "188:129",
+    "input": "mode.mask_2"
+   },
+   {
+    "node": "324:311",
+    "input": "mode.audio_encoder_output_2"
+   },
+   {
+    "node": "324:311",
+    "input": "mode.mask_1"
+   },
+   {
+    "node": "324:311",
+    "input": "mode.mask_2"
+   }
+  ],
+  "link": [
+   {
+    "node": "138",
+    "input": "audio",
+    "from": "24"
+   },
+   {
+    "node": "140",
+    "input": "audio",
+    "from": "24"
+   }
+  ],
+  "drop": [
+   "90",
+   "188:93",
+   "324:314",
+   "113",
+   "174",
+   "175",
+   "162"
+  ],
+  "size": {
+   "base": 640,
+   "multiple": 16,
+   "fromImage": true
+  },
+  "output": {
+   "node": "141"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "Wan2_1-I2V-14B-480p_fp8_e4m3fn_scaled_KJ.safetensors"
+    ],
+    "text_encoders": [
+     "umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+    ],
+    "vae": [
+     "Wan2_1_VAE_bf16.safetensors"
+    ],
+    "model_patches": [
+     "wan2.1_infiniteTalk_multi_fp16.safetensors"
+    ],
+    "audio_encoders": [
+     "wav2vec2-chinese-base_fp16.safetensors"
+    ],
+    "loras": [
+     "lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors"
+    ]
+   },
+   "nodes": [
+    "WanInfiniteTalkToVideo"
+   ]
+  },
+  "note": "no negative prompt input in this template"
+ },
+ "ltx25_t2v": {
+  "file": "ltx25_t2v.api.json",
+  "kind": "video",
+  "label": "LTX-2.5 22B distilled text to video with audio",
+  "bind": {
+   "prompt": {
+    "node": "405:376",
+    "input": "value"
+   },
+   "negative": {
+    "node": "405:373",
+    "input": "text"
+   },
+   "seed": {
+    "node": "405:339",
+    "input": "noise_seed"
+   },
+   "aspect_label": {
+    "node": "409",
+    "input": "aspect_ratio"
+   },
+   "duration": {
+    "node": "405:362",
+    "input": "value"
+   }
+  },
+  "drop": [
+   "405:380",
+   "405:393"
+  ],
+  "unlink": [
+   {
+    "node": "405:382",
+    "input": "on_true"
+   }
+  ],
+  "maxDuration": 10,
+  "output": {
+   "node": "75"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors"
+    ],
+    "vae": [
+     "ltx-2.5-video-vae-bf16.safetensors",
+     "ltx-2.5-audio-vae-bf16.safetensors"
+    ],
+    "text_encoders": [
+     "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors"
+    ],
+    "latent_upscale_models": [
+     "ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors"
+    ]
+   },
+   "nodes": [
+    "LTXVDualCFGGuider",
+    "LTXVLatentUpsampler"
+   ]
+  }
+ },
+ "ltx25_i2v": {
+  "file": "ltx25_i2v.api.json",
+  "kind": "i2v",
+  "label": "LTX-2.5 22B distilled image to video with audio",
+  "bind": {
+   "prompt": {
+    "node": "398:376",
+    "input": "value"
+   },
+   "negative": {
+    "node": "398:373",
+    "input": "text"
+   },
+   "seed": {
+    "node": "398:339",
+    "input": "noise_seed"
+   },
+   "image": {
+    "node": "395",
+    "input": "image"
+   },
+   "aspect_label": {
+    "node": "403",
+    "input": "aspect_ratio"
+   },
+   "duration": {
+    "node": "398:362",
+    "input": "value"
+   }
+  },
+  "drop": [
+   "398:380",
+   "398:393"
+  ],
+  "unlink": [
+   {
+    "node": "398:382",
+    "input": "on_true"
+   }
+  ],
+  "maxDuration": 10,
+  "size": {
+   "fromImage": true
+  },
+  "output": {
+   "node": "75"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors"
+    ],
+    "vae": [
+     "ltx-2.5-video-vae-bf16.safetensors",
+     "ltx-2.5-audio-vae-bf16.safetensors"
+    ],
+    "text_encoders": [
+     "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors"
+    ],
+    "latent_upscale_models": [
+     "ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors"
+    ]
+   },
+   "nodes": [
+    "LTXVImgToVideoInplace",
+    "LTXVLatentUpsampler"
+   ]
+  }
+ },
+ "ltx25_flf2v": {
+  "file": "ltx25_flf2v.api.json",
+  "kind": "i2v",
+  "label": "LTX-2.5 first+last frame with audio",
+  "bind": {
+   "prompt": {
+    "node": "251:252",
+    "input": "value"
+   },
+   "negative": {
+    "node": "251:217",
+    "input": "text"
+   },
+   "seed": {
+    "node": "251:196",
+    "input": "noise_seed"
+   },
+   "image": {
+    "node": "31",
+    "input": "image"
+   },
+   "last_image": {
+    "node": "39",
+    "input": "image"
+   },
+   "width": {
+    "node": "251:215",
+    "input": "value"
+   },
+   "height": {
+    "node": "251:216",
+    "input": "value"
+   },
+   "duration": {
+    "node": "251:198",
+    "input": "value"
+   }
+  },
+  "drop": [
+   "251:247",
+   "251:246"
+  ],
+  "unlink": [
+   {
+    "node": "251:248",
+    "input": "on_true"
+   }
+  ],
+  "maxDuration": 10,
+  "size": {
+   "base": 960,
+   "multiple": 32,
+   "fromImage": true
+  },
+  "output": {
+   "node": "68"
+  },
+  "requires": {
+   "models": {
+    "diffusion_models": [
+     "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors"
+    ],
+    "vae": [
+     "ltx-2.5-video-vae-bf16.safetensors",
+     "ltx-2.5-audio-vae-bf16.safetensors"
+    ],
+    "text_encoders": [
+     "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors"
+    ]
+   },
+   "nodes": [
+    "LTXVAddGuide",
+    "LTXVCropGuides"
+   ]
+  }
+ },
+ "ltx2_t2v_distilled": {
+  "file": "ltx2_t2v_distilled.api.json",
+  "kind": "video",
+  "label": "LTX-2 19B distilled text to video with audio",
+  "bind": {
+   "prompt": {
+    "node": "177:109",
+    "input": "value"
+   },
+   "seed": {
+    "node": "177:118",
+    "input": "noise_seed"
+   },
+   "length": {
+    "node": "177:113",
+    "input": "value"
+   },
+   "width": {
+    "node": "177:131",
+    "input": "width"
+   },
+   "height": {
+    "node": "177:131",
+    "input": "height"
+   }
+  },
+  "size": {
+   "base": 960,
+   "multiple": 32
+  },
+  "frames": {
+   "fps": 24,
+   "multiple": 8,
+   "plus": 1,
+   "max": 241
+  },
+  "output": {
+   "node": "104"
+  },
+  "requires": {
+   "models": {
+    "checkpoints": [
+     "ltx-2-19b-distilled.safetensors"
+    ],
+    "text_encoders": [
+     "gemma_3_12B_it_fp4_mixed.safetensors"
+    ],
+    "latent_upscale_models": [
+     "ltx-2-spatial-upscaler-x2-1.0.safetensors"
+    ]
+   },
+   "nodes": [
+    "LTXAVTextEncoderLoader"
+   ]
+  },
+  "note": "no negative prompt input in this template"
+ },
+ "ltx2_i2v_distilled": {
+  "file": "ltx2_i2v_distilled.api.json",
+  "kind": "i2v",
+  "label": "LTX-2 19B distilled image to video with audio",
+  "bind": {
+   "prompt": {
+    "node": "92:3",
+    "input": "text"
+   },
+   "seed": {
+    "node": "92:67",
+    "input": "noise_seed"
+   },
+   "image": {
+    "node": "98",
+    "input": "image"
+   },
+   "length": {
+    "node": "92:62",
+    "input": "value"
+   },
+   "width": {
+    "node": "102",
+    "input": "resize_type.width"
+   },
+   "height": {
+    "node": "102",
+    "input": "resize_type.height"
+   }
+  },
+  "size": {
+   "base": 960,
+   "multiple": 32,
+   "fromImage": true
+  },
+  "frames": {
+   "fps": 24,
+   "multiple": 8,
+   "plus": 1,
+   "max": 241
+  },
+  "output": {
+   "node": "75"
+  },
+  "requires": {
+   "models": {
+    "checkpoints": [
+     "ltx-2-19b-distilled.safetensors"
+    ],
+    "text_encoders": [
+     "gemma_3_12B_it_fp4_mixed.safetensors"
+    ],
+    "latent_upscale_models": [
+     "ltx-2-spatial-upscaler-x2-1.0.safetensors"
+    ]
+   },
+   "nodes": [
+    "LTXAVTextEncoderLoader",
+    "LTXVImgToVideoInplace"
+   ]
+  },
+  "note": "no negative prompt input in this template"
+ },
+ "seedvr2_image": {
+  "file": "seedvr2_image.api.json",
+  "kind": "edit",
+  "label": "SeedVR2 3B image upscale (shortest edge 1440)",
+  "bind": {
+   "image": {
+    "node": "24",
+    "input": "image"
+   },
+   "seed": {
+    "node": "47:27",
+    "input": "seed"
+   }
+  },
+  "constants": {
+   "resolution": {
+    "bind": {
+     "node": "47:27",
+     "input": "resolution"
+    },
+    "value": 1440
+   },
+   "model": {
+    "bind": {
+     "node": "47:28",
+     "input": "model"
+    },
+    "value": "seedvr2_ema_3b_fp8_e4m3fn.safetensors"
+   }
+  },
+  "drop": [
+   "47:43",
+   "47:40",
+   "47:25",
+   "47:30",
+   "47:21"
+  ],
+  "output": {
+   "node": "45"
+  },
+  "requires": {
+   "models": {},
+   "nodes": [
+    "SeedVR2VideoUpscaler",
+    "SeedVR2LoadDiTModel",
+    "SeedVR2LoadVAEModel"
+   ]
+  }
+ },
+ "seedvr2_video": {
+  "file": "seedvr2_video.api.json",
+  "kind": "v2v",
+  "label": "SeedVR2 3B video upscale to 1080p (first 96 frames)",
+  "bind": {
+   "video": {
+    "node": "18",
+    "input": "file"
+   },
+   "seed": {
+    "node": "15:4",
+    "input": "seed"
+   }
+  },
+  "constants": {
+   "model": {
+    "bind": {
+     "node": "15:5",
+     "input": "model"
+    },
+    "value": "seedvr2_ema_3b_fp8_e4m3fn.safetensors"
+   }
+  },
+  "output": {
+   "node": "17"
+  },
+  "requires": {
+   "models": {},
+   "nodes": [
+    "SeedVR2VideoUpscaler",
+    "SeedVR2LoadDiTModel",
+    "SeedVR2LoadVAEModel"
+   ]
+  },
+  "note": "no negative prompt input in this template"
+ },
+ "sd15_t2i": {
+  "file": "sd15_t2i.api.json",
+  "kind": "image",
+  "label": "SD 1.5 Realistic Vision 5.1 (local Metal fallback, 26 steps)",
+  "bind": {
+   "prompt": {
+    "node": "6",
+    "input": "text"
+   },
+   "negative": {
+    "node": "7",
+    "input": "text"
+   },
+   "width": {
+    "node": "5",
+    "input": "width"
+   },
+   "height": {
+    "node": "5",
+    "input": "height"
+   },
+   "seed": {
+    "node": "3",
+    "input": "seed"
+   }
+  },
+  "constants": {
+   "steps": {
+    "bind": {
+     "node": "3",
+     "input": "steps"
+    },
+    "value": 10
+   },
+   "cfg": {
+    "bind": {
+     "node": "3",
+     "input": "cfg"
+    },
+    "value": 6
+   }
+  },
+  "size": {
+   "base": 480,
+   "multiple": 8
+  },
+  "output": {
+   "node": "9"
+  },
+  "requires": {
+   "models": {
+    "checkpoints": [
+     "Realistic_Vision_V5.1_fp16-no-ema.safetensors"
+    ],
+    "vae": [
+     "vae-ft-mse-840000-ema-pruned.safetensors"
+    ]
+   },
+   "nodes": [
+    "CheckpointLoaderSimple",
+    "KSampler"
+   ]
+  }
+ }
+}

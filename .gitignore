@@ -1,0 +1,12 @@
+node_modules/
+.local/
+data/
+outputs/
+*.log
+.env
+.env.*
+kaggle.json
+.kaggle/
+__pycache__/
+*.pyc
+.DS_Store

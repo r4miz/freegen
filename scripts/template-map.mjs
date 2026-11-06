@@ -1,0 +1,21 @@
+// alias -> official ComfyUI template name (Comfy-Org/workflow_templates)
+export const TEMPLATES = {
+  flux2_klein_t2i: 'image_flux2_klein_text_to_image',
+  flux2_klein_edit: 'image_flux2_klein_image_edit_4b_distilled',
+  qwen21_t2i: 'image_qwen_image_2_1_t2i',
+  qwen21_edit: 'image_qwen_image_2_1_image_edit',
+  qwen21_bgremove: 'image_qwen_image_2_1_background_removal',
+  wan22_5b_ti2v: 'video_wan2_2_5B_ti2v',
+  wan22_14b_t2v: 'video_wan2_2_14B_t2v',
+  wan22_14b_i2v: 'video_wan2_2_14B_i2v',
+  wan22_14b_flf2v: 'video_wan2_2_14B_flf2v',
+  wan22_s2v: 'video_wan2_2_14B_s2v',
+  ltx25_t2v: 'video_ltx2_5_t2v',
+  ltx25_i2v: 'video_ltx2_5_i2v',
+  ltx25_flf2v: 'video_ltx2_5_flf2v',
+  ltx2_t2v_distilled: 'video_ltx2_t2v_distilled',
+  ltx2_i2v_distilled: 'video_ltx2_i2v_distilled',
+  infinitetalk_i2v: 'video_wan2_1_infinitetalk',
+  seedvr2_image: 'utility_seedvr2_image_upscale',
+  seedvr2_video: 'utility_seedvr2_video_upscale',
+};
